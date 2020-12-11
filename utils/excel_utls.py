@@ -33,6 +33,7 @@ class ExcelUtils:
             else:
                 cell_value = self.sheet.cell_value(row_index, col_index)
         return cell_value
+    '''将excel数据转成数据'''
     def get_all_data_by_dict(self):
          excel_list_data = []
          row_head = self.sheet.row_values(0)
@@ -43,10 +44,13 @@ class ExcelUtils:
              excel_list_data.append(row_dict)
          return excel_list_data
 
-excel_path = os.path.join(os.path.dirname(__file__), '..','data','TestData.xlsx')
-excel_value = ExcelUtils(excel_path,'testcase01')
+
+
+
 
 if __name__ == '__main__':
+    excel_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'testcase_datas.xlsx')
+    excel_value = ExcelUtils(excel_path, 'testcase01')
     # for i in range(0, 11):
     #     for j in range(0, 3):
     #         print(excel_value.get_merge_cell_values(i, j), end=' ')
