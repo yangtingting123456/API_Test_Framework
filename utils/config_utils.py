@@ -25,6 +25,6 @@ class ConfigUtils:
     def SMTP_RECEIVER(self):
         smtp_receiver_value = self.cfg.get('default', 'SMTP_RECEIVER')
         return smtp_receiver_value
-config = ConfigUtils()
+local_config = ConfigUtils()
 if __name__ == '__main__':
-    print( config.HOSTS )
+    print( local_config.HOSTS )

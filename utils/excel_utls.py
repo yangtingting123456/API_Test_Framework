@@ -33,7 +33,6 @@ class ExcelUtils:
             else:
                 cell_value = self.sheet.cell_value(row_index, col_index)
         return cell_value
-
     '''将excel数据转成数据'''
     def get_all_data_by_dict(self):
          excel_list_data = []
