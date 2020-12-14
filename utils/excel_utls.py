@@ -33,6 +33,7 @@ class ExcelUtils:
             else:
                 cell_value = self.sheet.cell_value(row_index, col_index)
         return cell_value
+
     '''将excel数据转成数据'''
     def get_all_data_by_dict(self):
          excel_list_data = []
@@ -43,8 +44,6 @@ class ExcelUtils:
                  row_dict[row_head[col_num]] = self.get_merge_cell_values(row_num, col_num)
              excel_list_data.append(row_dict)
          return excel_list_data
-
-
 
 
 
