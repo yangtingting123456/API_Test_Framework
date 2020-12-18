@@ -47,8 +47,8 @@ class ExcelUtils:
 
 
 if __name__ == '__main__':
-    excel_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'testcase_datas.xlsx')
-    excel_value = ExcelUtils(excel_path, 'testcase01')
+    excel_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'testcase_infos.xlsx')
+    excel_value = ExcelUtils(excel_path, 'Sheet1')
     # for i in range(0, 11):
     #     for j in range(0, 3):
     #         print(excel_value.get_merge_cell_values(i, j), end=' ')
