@@ -1,8 +1,8 @@
 from utils.excel_utls import ExcelUtils
 import os
 
-excel_file_path = os.path.join(os.path.dirname(__file__), '..','data','testcase_datas.xlsx')
-sheet_name = 'testcase01'
+excel_file_path = os.path.join(os.path.dirname(__file__), '..','data','testcase_infos.xlsx')
+sheet_name = 'Sheet1'
 
 class TestcaseDataUtils:
     def __init__(self):
@@ -34,4 +34,4 @@ if __name__ == '__main__':
     #     print(testcase)
     for t in test_case_lists:
         print(t)
-    print(test_case_lists[0]['case_step'][0]['请求参数（get）'])
+    print(test_case_lists[0]['case_step'][0]['请求参数(get)'])

@@ -5,7 +5,7 @@ sheet = workbook.sheet_by_name('testcase01')
 # merged_cells 获取当前表格所有合并单元格的位置信息 ，返回一个列表
 def get_cell_merge_values(row_index,col_index):
     cell_value = None
-    merged = sheet.merged_cells
+    merged = sheet.merged_cellsSheet1
     for (rlow, rhigh, clow, chigh) in merged:  # 遍历表格中所有合并单元格位置信息
         if (row_index >= rlow and row_index < rhigh):  # 行坐标判断
             if (col_index >= clow and col_index < chigh):  # 列坐标判断
