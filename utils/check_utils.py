@@ -4,14 +4,18 @@
 # @FileName: check.py
 import requests
 import json
+import re
 class CheckUtils:
     def __init__(self,response_data):
         self.response_data = response_data
         self.check_rules = {
             "none" :  self.none_check,
-            "json_key" : self.json_key,
-            "json_key_value" : self.json_key_value,
-            "body_regexp" : self.regexp_check
+            "json_key" : self.body_key_check,
+            "json_key_value" : self.body_key_value_check,
+            "body_regexp" : self.regexp_check,
+            "header_key":self.header_key_check,
+            "header_key_value":self.header_key_value_check,
+            "response_code": self.response_code_check
         }
         self.pass_result  = {
             'code':0,
@@ -39,36 +43,61 @@ class CheckUtils:
         return True
 
     '''针对接口的json字符串的key进行断言'''
-    def json_key(self,check_data):
+    def __key_check(self,actual_result,check_data):
         key_list = check_data.split(',')
         tmp_result = []
         for key in key_list:
-            if key in self.response_data.json().keys():
-                tmp_result.append(self.fail_result)
+            if key in actual_result.keys():
+                tmp_result.append(self.pass_result)
             else:
                 tmp_result.append(self.fail_result)
             if self.fail_result in tmp_result:
                  return self.fail_result
             else:
                 return self.pass_result
+        '''检查接口请求头包含的json key'''
+    def header_key_check(self,check_data):
+        return self.__key_check(self.response_data.headers,check_data)
+
+    '''检查接口响应体包含的json key言'''
+    def body_key_check(self,check_data):
+        return self.__key_check(self.response_data.json(),check_data)
 
     ''' 针对接口字典key-value值进行断言'''
-    def json_key_value(self,check_data):
+
+    def __key_value_check(self, actual_result, check_data):
         key_value_dict = json.loads(check_data)
         tmp_result = []
         for key_value in key_value_dict.items():
-            if key_value in self.response_data.json().items():
+            if key_value in actual_result.items():
                 tmp_result.append(self.pass_result)
             else:
                 tmp_result.append(self.fail_result)
-            if self.fail_result in tmp_result:
-                return self.fail_result
-            else:
-                return self.pass_result
+        if self.fail_result in tmp_result:
+            return self.fail_result
+        else:
+            return self.pass_result
+
+    def header_key_value_check(self, check_data):
+        return self.__key_value_check(self.response_data.headers, check_data)
+
+    def body_key_value_check(self, check_data):
+        return self.__key_value_check(self.response_data.json(), check_data)
+
+    def response_code_check(self,check_data):
+        if self.response_data.status_code == check_data:
+            return self.pass_result
+        else:
+            return self.fail_result
+
 
     '''针对接口正则进行断言'''
-    def regexp_check(self):
-        pass
+    def regexp_check(self,check_data):
+        tmp_result = re.findall(check_data,self.response_data.text)
+        if tmp_result:
+            return self.pass_result
+        else:
+            return self.fail_result
 
     ''' 读取excel接口测试用例断言的类型，与断言结果进行比较，进行断言；'''
     def run_check(self,check_type,check_data=None):
@@ -90,5 +119,9 @@ if __name__ == '__main__':
     # print(checkutils.key_value_check('{"expires_in":7200}'))
     print(checkutils.run_check('json_key','access_token,expires_in'))
     print(checkutils.run_check('json_key_value','{"expires_in":7200}'))
+    print(checkutils.run_check('body_regexp','"access_token":"(.+?)"'))
+    print(checkutils.run_check('header_key','Connection,Content-Length'))
+    print(checkutils.run_check('header_key_value','{"Connection":"keep-alive","Content-Type":"application/json; encoding=utf-8"}'))
+    print(checkutils.run_check('response_code',200))
 
 
