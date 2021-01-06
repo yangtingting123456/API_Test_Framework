@@ -15,6 +15,7 @@ class CheckUtils:
             "body_regexp" : self.regexp_check,
             "header_key":self.header_key_check,
             "header_key_value":self.header_key_value_check,
+            'message':'',
             "response_code": self.response_code_check
         }
         self.pass_result  = {
@@ -25,6 +26,7 @@ class CheckUtils:
             'response_body' : self.response_data.text,
             'response_data': self.response_data.url,
             'response' : self.response_data,
+            'message':'',
             'check_result': True
         }
         self.fail_result = {

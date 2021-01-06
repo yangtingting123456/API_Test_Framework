@@ -5,6 +5,8 @@ import json
 import jsonpath
 import re
 from utils.check_utils import CheckUtils
+from requests.exceptions import RequestException,ProxyError,ConnectionError
+
 class RequestsUtils:
     def __init__(self):
         self.hosts = local_config.HOSTS
@@ -13,53 +15,75 @@ class RequestsUtils:
 
     '''对get请求进行封装'''
     def __get(self,requests_info):
-        url = self.hosts+requests_info['请求地址']
-        variable_list = re.findall('\\${\w+}', requests_info['请求参数(get)'])
-        for v in variable_list:
-            requests_info['请求参数(get)'] = requests_info['请求参数(get)'].replace(v,
-                                                                            '"%s"' % self.tmp_variables[v[2:-1]])
-        response = self.session.get(url = url,
-                                    params = json.loads(requests_info['请求参数(get)']),
-                                    headers = requests_info['请求头部信息'])
-        response.encoding = response.apparent_encoding  #保证不乱吗
-        if requests_info['取值方式'] == 'jsonpath取值':
-            value = jsonpath.jsonpath(response.json(),requests_info['取值代码'])[0]
-            self.tmp_variables[requests_info['取值变量']] = value
-        elif requests_info['取值方式'] == '正则取值':
-            value = re.findall(requests_info['取值代码'],response.text)[0]
-            self.tmp_variables[requests_info['取值变量']] = value
-        result = CheckUtils(response).run_check(requests_info['断言类型'],requests_info['期望结果'])
-        print(result)
+        try:
+            url = self.hosts+requests_info['请求地址']
+            variable_list = re.findall('\\${\w+}', requests_info['请求参数(get)'])
+            for v in variable_list:
+                requests_info['请求参数(get)'] = requests_info['请求参数(get)'].replace(v,
+                                                                                '"%s"' % self.tmp_variables[v[2:-1]])
+            response = self.session.get(url = url,
+                                        params = json.loads(requests_info['请求参数(get)']),
+                                        headers = requests_info['请求头部信息'])
+            response.encoding = response.apparent_encoding  #保证不乱吗
+            if requests_info['取值方式'] == 'jsonpath取值':
+                value = jsonpath.jsonpath(response.json(),requests_info['取值代码'])[0]
+                self.tmp_variables[requests_info['取值变量']] = value
+            elif requests_info['取值方式'] == '正则取值':
+                value = re.findall(requests_info['取值代码'],response.text)[0]
+                self.tmp_variables[requests_info['取值变量']] = value
+            result = CheckUtils(response).run_check(requests_info['断言类型'],requests_info['期望结果'])
+            print(result)
+        except ProxyError as e:
+            result = {'code':3,'message':'调用接口[%s]时发生Prox异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result':False}
+        except ConnectionError as e:
+            result = {'code':3,'message':'调用接口[%s]时发生Connection异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result':False}
+        except RequestException as e:
+            result = {'code': 3,'message':'调用接口[%s]时发生Request异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result': False}
+        except Exception as e:
+            result = {'code': 3,'message':'调用接口[%s]时发异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result': False}
         return result
 
     '''对post请求进行封装'''
     def __post(self,requests_info):
-        url = self.hosts+requests_info['请求地址']
-        get_variable_list = re.findall('\\${\w+}', requests_info['请求参数(get)'])
-        for variable in get_variable_list:
-            requests_info['请求参数(get)'] = requests_info['请求参数(get)'].replace(variable,
-                                                                            '"%s"' % self.tmp_variables[variable[2:-1]])
-        post_variable_list = re.findall('\\${\w+}', requests_info['请求参数(post)'])
-        for variable in post_variable_list:
-            requests_info['请求参数(post)'] = requests_info['请求参数(post)'].replace(variable,
-                                                                              '"%s"' % self.tmp_variables[variable[2:-1]])
-            print(self.tmp_variables)
-        response = self.session.post(url=url,
-                                     headers=requests_info['请求头部信息'],
-                                     params=json.loads(requests_info['请求参数(get)']),
-                                     data=json.dumps(json.loads(requests_info['请求参数(post)']),
-                                                     ensure_ascii=False).encode('utf-8')
-                                     # json = json.loads(requests_info['请求参数(post)'])
-                                     )
-        response.encoding = response.apparent_encoding  #保证不乱吗
-        if requests_info['取值方式'] == 'jsonpath取值':
-            value = jsonpath.jsonpath(response.json(),requests_info['取值代码'])[0]
-            self.tmp_variables[requests_info['取值变量']] = value
-        elif requests_info['取值方式'] == '正则取值':
-            value = re.findall(requests_info['取值代码'], response.text)[0]
-            self.tmp_variables[requests_info['取值变量']] = value
-        result = CheckUtils(response).run_check(requests_info['断言类型'], requests_info['期望结果'])
-        print(result)
+        try:
+            url = self.hosts+requests_info['请求地址']
+            get_variable_list = re.findall('\\${\w+}', requests_info['请求参数(get)'])
+            for variable in get_variable_list:
+                requests_info['请求参数(get)'] = requests_info['请求参数(get)'].replace(variable,
+                                                                                '"%s"' % self.tmp_variables[variable[2:-1]])
+            post_variable_list = re.findall('\\${\w+}', requests_info['请求参数(post)'])
+            for variable in post_variable_list:
+                requests_info['请求参数(post)'] = requests_info['请求参数(post)'].replace(variable,
+                                                                                  '"%s"' % self.tmp_variables[variable[2:-1]])
+                print(self.tmp_variables)
+            response = self.session.post(url=url,
+                                         headers=requests_info['请求头部信息'],
+                                         params=json.loads(requests_info['请求参数(get)']),
+                                         data=json.dumps(json.loads(requests_info['请求参数(post)']),
+                                                         ensure_ascii=False).encode('utf-8')
+                                         # json = json.loads(requests_info['请求参数(post)'])
+                                         )
+            response.encoding = response.apparent_encoding  #保证不乱吗
+            if requests_info['取值方式'] == 'jsonpath取值':
+                value = jsonpath.jsonpath(response.json(),requests_info['取值代码'])[0]
+                self.tmp_variables[requests_info['取值变量']] = value
+            elif requests_info['取值方式'] == '正则取值':
+                value = re.findall(requests_info['取值代码'], response.text)[0]
+                self.tmp_variables[requests_info['取值变量']] = value
+            result = CheckUtils(response).run_check(requests_info['断言类型'], requests_info['期望结果'])
+            print(result)
+        except ProxyError as e:
+            result = {'code': 3, 'message': '调用接口[%s]时发生Proxy异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
+                      'check_result': False}
+        except ConnectionError as e:
+            result = {'code': 3, 'message': '调用接口[%s]时发生Connection异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
+                      'check_result': False}
+        except RequestException as e:
+            result = {'code': 3, 'message': '调用接口[%s]时发生Request异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
+                      'check_result': False}
+        except Exception as e:
+            result = {'code': 3, 'message': '调用接口[%s]时发异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
+                      'check_result': False}
         return result
 
     '''将get请求和post请求封装成私有的方法'''
@@ -70,7 +94,7 @@ class RequestsUtils:
         elif request_type == 'post':
             result = self.__post(step_info)
         else:
-            result = {'code':2,'result':'请求方式不支持'}
+            result = {'code':2,'message':'请求方式不支持','check_result':False}
         return result
 
     '''批量处理测试用例'''

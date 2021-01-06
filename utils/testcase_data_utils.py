@@ -12,7 +12,8 @@ class TestcaseDataUtils:
         '''数据类型转换成字典'''
         testcase_dict = {}
         for row_data in self.excel_data.get_all_data_by_dict():
-           testcase_dict.setdefault(row_data['测试用例编号'], []).append(row_data)
+            if row_data['用例执行'] == '是':
+               testcase_dict.setdefault(row_data['测试用例编号'], []).append(row_data)
         return testcase_dict
 
     def conver_testcase_data_to_list(self):
