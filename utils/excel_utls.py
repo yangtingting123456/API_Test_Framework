@@ -5,19 +5,23 @@ class ExcelUtils:
         self.excel_file_path = excel_file_path
         self.sheet_name= sheet_name
         self.sheet = self.get_sheet()
+
     def get_sheet(self):
         '''根据文件路径获取表格对象'''
         workbook = xlrd3.open_workbook(self.excel_file_path)
         sheet = workbook.sheet_by_name(self.sheet_name)
         return sheet
+
     def get_row_count(self):
         '''获取表格行数'''
         max_row_number = self.sheet.nrows
         return max_row_number
+
     def get_column_count(self):
         '''获取表格列数'''
         column_count = self.sheet.ncols
         return column_count
+
     def get_merge_cell_values(self,row_index,col_index):
         '''处理excel单元格的数据，包含合并单元格数据'''
         cell_value = None
@@ -33,6 +37,7 @@ class ExcelUtils:
             else:
                 cell_value = self.sheet.cell_value(row_index, col_index)
         return cell_value
+
     '''将excel数据转成数据'''
     def get_all_data_by_dict(self):
          excel_list_data = []
@@ -44,8 +49,6 @@ class ExcelUtils:
              excel_list_data.append(row_dict)
          return excel_list_data
 
-
-
 if __name__ == '__main__':
     excel_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'testcase_infos.xlsx')
     excel_value = ExcelUtils(excel_path, 'Sheet1')
@@ -53,6 +56,5 @@ if __name__ == '__main__':
     #     for j in range(0, 3):
     #         print(excel_value.get_merge_cell_values(i, j), end=' ')
     #     print()
-
     for  data  in excel_value.get_all_data_by_dict():
         print(data)

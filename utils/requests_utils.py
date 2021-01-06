@@ -6,7 +6,9 @@ import jsonpath
 import re
 from utils.check_utils import CheckUtils
 from requests.exceptions import RequestException,ProxyError,ConnectionError
+from nb_log import LogManager
 
+logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename='Api_Test_Framework.log')
 class RequestsUtils:
     def __init__(self):
         self.hosts = local_config.HOSTS
@@ -34,13 +36,18 @@ class RequestsUtils:
             result = CheckUtils(response).run_check(requests_info['断言类型'],requests_info['期望结果'])
             print(result)
         except ProxyError as e:
-            result = {'code':3,'message':'调用接口[%s]时发生Prox异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result':False}
+            result = {'code': 3, 'message': '调用接口[%s]时发生Proxy异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),'check_result': False}
+            logger.error('调用接口[%s]时发生Proxy异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()))
         except ConnectionError as e:
-            result = {'code':3,'message':'调用接口[%s]时发生Connection异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result':False}
+            result = {'code': 3, 'message': '调用接口[%s]时发生Connection异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),'check_result': False}
+            logger.error('调用接口[%s]时发生Connection异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()))
         except RequestException as e:
-            result = {'code': 3,'message':'调用接口[%s]时发生Request异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result': False}
+            result = {'code': 3, 'message': '调用接口[%s]时发生Request异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),'check_result': False}
+            logger.error('调用接口[%s]时发生Request异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()))
         except Exception as e:
-            result = {'code': 3,'message':'调用接口[%s]时发异常，异常原因为%s'%(requests_info['接口名称'],e.__str__()),'check_result': False}
+            result = {'code': 3, 'message': '调用接口[%s]时发异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()), 'check_result': False}
+            logger.error('调用接口[%s]时发异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()))
+            print(logger.info(result))
         return result
 
     '''对post请求进行封装'''
@@ -73,28 +80,31 @@ class RequestsUtils:
             result = CheckUtils(response).run_check(requests_info['断言类型'], requests_info['期望结果'])
             print(result)
         except ProxyError as e:
-            result = {'code': 3, 'message': '调用接口[%s]时发生Proxy异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
-                      'check_result': False}
+            result = {'code': 3, 'message': '调用接口[%s]时发生Proxy异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()),'check_result': False}
+            logger.error('调用接口[%s]时发生Proxy异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()))
         except ConnectionError as e:
-            result = {'code': 3, 'message': '调用接口[%s]时发生Connection异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
-                      'check_result': False}
+            result = {'code': 3, 'message': '调用接口[%s]时发生Connection异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()),'check_result': False}
+            logger.error('调用接口[%s]时发生Connection异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()))
         except RequestException as e:
-            result = {'code': 3, 'message': '调用接口[%s]时发生Request异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
-                      'check_result': False}
+            result = {'code': 3, 'message': '调用接口[%s]时发生Request异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()),'check_result': False}
+            logger.error('调用接口[%s]时发生Request异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()))
         except Exception as e:
-            result = {'code': 3, 'message': '调用接口[%s]时发异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()),
-                      'check_result': False}
+            result = {'code': 3, 'message': '调用接口[%s]时发异常，异常原因为:%s' % (requests_info['接口名称'], e.__str__()),'check_result': False}
+            logger.error('调用接口[%s]时发异常，异常原因为%s' % (requests_info['接口名称'], e.__str__()))
         return result
 
     '''将get请求和post请求封装成私有的方法'''
     def request(self,step_info):
         request_type = step_info['请求方式']
+        logger.info('%s 接口开始调用'%step_info['接口名称'])
         if request_type == 'get':
             result = self.__get(step_info)
         elif request_type == 'post':
             result = self.__post(step_info)
         else:
             result = {'code':2,'message':'请求方式不支持','check_result':False}
+            logger.error('%s 调用时 %s' % (step_info['接口名称'],result['message']))
+        logger.info('%s 接口调用结束' % step_info['接口名称'])
         return result
 
     '''批量处理测试用例'''

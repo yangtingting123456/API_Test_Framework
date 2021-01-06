@@ -5,6 +5,9 @@
 import requests
 import json
 import re
+from nb_log import LogManager
+
+logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename='Api_Test_Framework.log')
 class CheckUtils:
     def __init__(self,response_data):
         self.response_data = response_data
@@ -42,7 +45,7 @@ class CheckUtils:
 
     ''' nono断言'''
     def none_check(self):
-        return True
+        return self.pass_result
 
     '''针对接口的json字符串的key进行断言'''
     def __key_check(self,actual_result,check_data):
@@ -54,10 +57,11 @@ class CheckUtils:
             else:
                 tmp_result.append(self.fail_result)
             if self.fail_result in tmp_result:
+                 logger.info('断言失败，失败原因%s' % self.fail_result)
                  return self.fail_result
             else:
                 return self.pass_result
-        '''检查接口请求头包含的json key'''
+    '''检查接口请求头包含的json key'''
     def header_key_check(self,check_data):
         return self.__key_check(self.response_data.headers,check_data)
 
@@ -66,7 +70,6 @@ class CheckUtils:
         return self.__key_check(self.response_data.json(),check_data)
 
     ''' 针对接口字典key-value值进行断言'''
-
     def __key_value_check(self, actual_result, check_data):
         key_value_dict = json.loads(check_data)
         tmp_result = []
@@ -76,6 +79,7 @@ class CheckUtils:
             else:
                 tmp_result.append(self.fail_result)
         if self.fail_result in tmp_result:
+            logger.info('断言失败，失败原因%s' % self.fail_result)
             return self.fail_result
         else:
             return self.pass_result
@@ -90,8 +94,8 @@ class CheckUtils:
         if self.response_data.status_code == check_data:
             return self.pass_result
         else:
+            logger.info('断言失败，失败原因%s' % self.fail_result)
             return self.fail_result
-
 
     '''针对接口正则进行断言'''
     def regexp_check(self,check_data):
@@ -99,12 +103,13 @@ class CheckUtils:
         if tmp_result:
             return self.pass_result
         else:
+            logger.info('断言失败，失败原因%s' %self.fail_result)
             return self.fail_result
 
     ''' 读取excel接口测试用例断言的类型，与断言结果进行比较，进行断言；'''
     def run_check(self,check_type,check_data=None):
         if check_type=='none' or check_type=='':
-            return  self.check_rules[check_type]()
+            return  self.check_rules['none']()
         else:
             return  self.check_rules[check_type](check_data)
 
@@ -119,11 +124,12 @@ if __name__ == '__main__':
     checkutils = CheckUtils(response)
     # print( checkutils.key_check('access_token,expires_in'))
     # print(checkutils.key_value_check('{"expires_in":7200}'))
-    print(checkutils.run_check('json_key','access_token,expires_in'))
-    print(checkutils.run_check('json_key_value','{"expires_in":7200}'))
-    print(checkutils.run_check('body_regexp','"access_token":"(.+?)"'))
-    print(checkutils.run_check('header_key','Connection,Content-Length'))
-    print(checkutils.run_check('header_key_value','{"Connection":"keep-alive","Content-Type":"application/json; encoding=utf-8"}'))
-    print(checkutils.run_check('response_code',200))
+    # print(checkutils.run_check('json_key','access_token,expires_in'))
+    # print(checkutils.run_check('json_key_value','{"expires_in":7200}'))
+    # print(checkutils.run_check('body_regexp','"access_token":"(.+?)"'))
+    # print(checkutils.run_check('header_key','Connection,Content-Length'))
+    # print(checkutils.run_check('header_key_value','{"Connection":"keep-alive","Content-Type":"application/json; encoding=utf-8"}'))
+    # print(checkutils.run_check('response_code',200))
+    print(checkutils.run_check('none',""))
 
 
