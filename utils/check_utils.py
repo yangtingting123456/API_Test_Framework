@@ -57,7 +57,7 @@ class CheckUtils:
             else:
                 tmp_result.append(self.fail_result)
             if self.fail_result in tmp_result:
-                 logger.info('断言失败，失败原因%s' % self.fail_result)
+                 logger.error('断言失败，失败原因%s' % self.fail_result)
                  return self.fail_result
             else:
                 return self.pass_result
@@ -79,7 +79,7 @@ class CheckUtils:
             else:
                 tmp_result.append(self.fail_result)
         if self.fail_result in tmp_result:
-            logger.info('断言失败，失败原因%s' % self.fail_result)
+            logger.error('断言失败，失败原因%s' % self.fail_result)
             return self.fail_result
         else:
             return self.pass_result
@@ -94,7 +94,7 @@ class CheckUtils:
         if self.response_data.status_code == check_data:
             return self.pass_result
         else:
-            logger.info('断言失败，失败原因%s' % self.fail_result)
+            logger.error('断言失败，失败原因%s' % self.fail_result)
             return self.fail_result
 
     '''针对接口正则进行断言'''
@@ -103,7 +103,7 @@ class CheckUtils:
         if tmp_result:
             return self.pass_result
         else:
-            logger.info('断言失败，失败原因%s' %self.fail_result)
+            logger.error('断言失败，失败原因%s' %self.fail_result)
             return self.fail_result
 
     ''' 读取excel接口测试用例断言的类型，与断言结果进行比较，进行断言；'''
