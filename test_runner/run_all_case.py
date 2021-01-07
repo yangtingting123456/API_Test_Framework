@@ -8,7 +8,7 @@ from utils import HTMLTestReportCN
 from utils.config_utils import local_config
 from nb_log import LogManager
 
-logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename='Api_Test_Framework.log')
+logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename=local_config.LOG_NAME)
 current_path = os.path.dirname(__file__)
 case_path = os.path.join(current_path,'..','testcases')
 report_path = os.path.join(current_path,'..',local_config.REPORT_PATH)

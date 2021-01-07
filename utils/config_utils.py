@@ -1,5 +1,6 @@
 import os
 import configparser
+import time
 config_file_path = os.path.join( os.path.dirname(__file__) ,'..','config','localconfig.ini' )
 class ConfigUtils:
     def __init__(self,conf_path = config_file_path):
@@ -21,10 +22,17 @@ class ConfigUtils:
     def LOG_LEVEL(self):
         log_level_value = int(self.cfg.get('default','LOG_LEVEL'))
         return log_level_value
+
+    @property
+    def LOG_NAME(self):
+        log_level_value = '%s_%s.log'%(self.cfg.get('default', 'LOG_NAME'),time.strftime('%Y_%m_%d_%H_%M_%S',))
+        return log_level_value
+
     @property
     def SMTP_RECEIVER(self):
         smtp_receiver_value = self.cfg.get('default', 'SMTP_RECEIVER')
         return smtp_receiver_value
+
 local_config = ConfigUtils()
 if __name__ == '__main__':
-    print( local_config.REPORT_PATH )
+    print( local_config.LOG_NAME )

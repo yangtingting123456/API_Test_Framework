@@ -9,8 +9,9 @@ from  utils.testcase_data_utils import TestcaseDataUtils
 from utils.requests_utils import RequestsUtils
 import warnings
 from nb_log import LogManager
+from utils.config_utils import local_config
 
-logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename='Api_Test_Framework.log')
+logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename=local_config.LOG_NAME)
 current_path = os.path.dirname(__file__)
 test_case_lists = TestcaseDataUtils().conver_testcase_data_to_list()
 @paramunittest.parametrized(

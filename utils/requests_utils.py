@@ -8,7 +8,7 @@ from utils.check_utils import CheckUtils
 from requests.exceptions import RequestException,ProxyError,ConnectionError
 from nb_log import LogManager
 
-logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename='Api_Test_Framework.log')
+logger = LogManager('Api_Test_Framework').get_logger_and_add_handlers(is_add_mail_handler=True,log_filename=local_config.LOG_NAME)
 class RequestsUtils:
     def __init__(self):
         self.hosts = local_config.HOSTS
