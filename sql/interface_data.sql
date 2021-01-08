@@ -59,6 +59,6 @@
 -- INSERT INTO case_step_info VALUES('api_case_03','step_id_03','api_003','无','','','json_key_value','{"errcode":0}');
 
 -- 三张表联查
---  SELECT * FROM case_info,case_step_info,requests_info
--- WHERE case_info.case_id = case_step_info.case_id AND case_step_info.requests_id = requests_info.requests_id AND case_info.is_run = '是'
--- ORDER BY case_info.case_id,case_step_info.case_step_id;
+-- select * from case_info,case_step_info,requests_info
+-- where case_info.case_id = case_step_info.case_id and case_step_info.requests_id = requests_info.requests_id and case_info.is_run = '是'
+-- order by case_info.case_id,case_step_info.case_step_id;
