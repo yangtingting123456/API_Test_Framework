@@ -39,7 +39,7 @@ class ExcelUtils:
         return cell_value
 
     '''将excel数据转成数据'''
-    def get_all_data_by_dict(self):
+    def get_all_data(self):
          excel_list_data = []
          row_head = self.sheet.row_values(0)
          for row_num in range(1, self.get_row_count()):

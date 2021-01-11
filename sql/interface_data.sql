@@ -44,7 +44,7 @@
 
 -- requests_info 表中插入数据
 -- INSERT INTO requests_info VALUES('api_001','获取access_token接口测试','get','','/cgi-bin/token','{"grant_type":"client_credential","appid":"wxf26ad2ae7497289a","secret":"177931a321a1f39a47a1ef202d8a3497"}','');
--- INSERT INTO requests_info VALUES('api_002','创建标签接口测试','post','','/cgi-bin/tags/create','{"access_token":${token}','{"tag":{"name":"dfgdfg"}} ');
+-- INSERT INTO requests_info VALUES('api_002','创建标签接口测试','post','','/cgi-bin/tags/create','{"access_token":${token}','{"tag":{"name":"dfgdfg"}}');
 -- INSERT INTO requests_info VALUES('api_003','删除标签接口测试','post','','/cgi-bin/token','{"access_token":${token}','{"tag":{ "id":${tag_id}}}');
 
 -- case_step_info 表中插入数据
