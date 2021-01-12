@@ -35,4 +35,4 @@ class ConfigUtils:
 
 local_config = ConfigUtils()
 if __name__ == '__main__':
-    print( local_config.LOG_NAME )
+    print( local_config.SMTP_RECEIVER )
