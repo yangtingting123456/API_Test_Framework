@@ -60,10 +60,10 @@ class CheckUtils:
                 tmp_result.append(self.fail_result)
             if self.fail_result in tmp_result:
                  logger.error('断言失败，失败原因%s' % self.fail_result)
-                 logger.info('测试实际通过：%s === 测试期望结果：%s 不一致，检测失败'%(json.dumps(actual_result),check_data))
+                 logger.info('测试实际通过：%s === 测试期望结果：%s 不一致，检测失败'%(json.dumps(actual_result,ensure_ascii=False),check_data))
                  return self.fail_result
             else:
-                logger.info('测试实际通过：%s === 测试期望结果：%s 一致，检测通过'%(json.dumps(actual_result),check_data))
+                logger.info('测试实际通过：%s === 测试期望结果：%s 一致，检测通过'%(json.dumps(actual_result,ensure_ascii=False),check_data))
                 return self.pass_result
     '''检查接口请求头包含的json key'''
     def header_key_check(self,check_data):
@@ -84,7 +84,7 @@ class CheckUtils:
                 tmp_result.append(self.fail_result)
         if self.fail_result in tmp_result:
             logger.error('断言失败，失败原因%s' % self.fail_result)
-            logger.info('测试实际通过：%s ===测试期望结果：%s 不一致，检测失败'%(json.dumps(actual_result),check_data))
+            logger.info('测试实际通过：%s ===测试期望结果：%s 不一致，检测失败'%(json.dumps(actual_result,ensure_ascii=False),check_data))
             logger.info(str(tmp_result)+'tmp_resulttmp_resulttmp_resulttmp_resulttmp_resultasdfa')
             return self.fail_result
         else:
