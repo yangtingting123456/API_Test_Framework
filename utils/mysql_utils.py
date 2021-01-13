@@ -8,10 +8,10 @@ import pymysql
 class MysqlUtils:
     def __init__(self):
         self.conn = pymysql.connect(
-            host='127.0.0.1',
+            host='192.168.177.42',
             port=3306,
-            user='ytt',
-            password='123456',
+            user='root',
+            password='Php123&juneyaokc',
             database='interface_test_db',
             charset='utf8'
         )
