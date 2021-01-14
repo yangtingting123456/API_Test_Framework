@@ -4,6 +4,8 @@
 # @FileName: run_all_case.py
 import unittest
 import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
 from utils import HTMLTestReportCN
 from utils.config_utils import local_config
 from nb_log import LogManager
