@@ -2,8 +2,10 @@
 # @Time    : 2021/1/8 17:25
 # @Author  : tingting.yang
 # @FileName: mysql_utl.py
+import os,sys
+dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append("c:\\users\\tingting.yang\\appdata\\roaming\\python\\python37\\site-packages")
 import pymysql
-
 
 class MysqlUtils:
     def __init__(self):
