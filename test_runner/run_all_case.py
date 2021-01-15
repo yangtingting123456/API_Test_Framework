@@ -3,6 +3,7 @@
 # @Author  : tingting.yang
 # @FileName: run_all_case.py
 import unittest
+import shutil
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__),'..'))
@@ -24,14 +25,18 @@ def load_testcase():
     return all_case_suit
 
 result_dir = HTMLTestReportCN.ReportDirectory(report_path)
-result_dir.create_dir('接口框架自动化测试报告_')
+result_dir.create_dir('interfacereport_')
 report_html_path = HTMLTestReportCN.GlobalMsg.get_value('report_path')
+logger.info(report_html_path)
 report_html_obj = open(report_html_path,'wb')
 runner = HTMLTestReportCN.HTMLTestRunner(stream=report_html_obj,
-                                         title='接口自动化测试框架报告',
+                                         title='interfacereport',
                                          description='数据驱动+关键字驱动',
                                          tester='yangtingting')
 logger.info('接口自动化开始执行')
 runner.run(load_testcase())
 report_html_obj.close()
-EmailUtils('微信公众号接口测试报告',report_html_path).send_mail()
+# EmailUtils('微信公众号接口测试报告',report_html_path).send_mail()
+# os.system('copy %s %s/接口自动化测试报告.html /e'
+#           %(report_html_path,sys.argv[1]))
+shutil.copyfile(report_html_path,'%s/接口自动化测试报告.html'%sys.argv[1])
