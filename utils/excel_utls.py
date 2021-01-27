@@ -56,5 +56,5 @@ if __name__ == '__main__':
     #     for j in range(0, 3):
     #         print(excel_value.get_merge_cell_values(i, j), end=' ')
     #     print()
-    for  data  in excel_value.get_all_data_by_dict():
+    for  data  in excel_value.get_all_data():
         print(data)
